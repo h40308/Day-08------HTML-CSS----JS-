@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>🐶妙麗歲數計算機</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+      padding: 28px;
+      background: #f2f4f7;
+      color: #222;
+    }
+
+    h2 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.4rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      max-width: 460px;
+    }
+
+    .field {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+
+    input[type="date"] {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    #calculate-btn {
+      padding: 10px 16px;
+      background: #f8f9ff;
+      border: 2px solid #5b6bff;
+      border-radius: 6px;
+      color: #1b1b1f;
+      cursor: pointer;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    #calculate-btn:hover { opacity: 0.95; }
+
+    .result-card {
+      background: #fbfbfd;
+      border-radius: 8px;
+      padding: 12px 14px;
+      border-left: 4px solid #eee;
+      color: #333;
+    }
+
+    .result-card strong { color: #111; }
+  </style>
+</head>
+<body>
+  <h2>🐶妙麗歲數計算機</h2>
+  <div class="card">
+    <label class="field">
+      狗狗的出生日期：
+      <input type="date" id="birthdate" value="2023-02-28">
+    </label>
+
+    <button id="calculate-btn">開始計算</button>
+
+    <div id="result-card" class="result-card" aria-live="polite">
+      <p id="result">尚未計算</p>
+    </div>
+  </div>
+
+  <script>
+    // Elements
+    const birthdateInput = document.getElementById('birthdate');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const resultP = document.getElementById('result');
+
+    // Default dog name shown in the example screenshot
+    const dogName = '妙麗';
+
+    function calculateDogAge(birthDate) {
+      const now = new Date();
+      const diffMs = now - birthDate;
+      const msPerYear = 365.25 * 24 * 60 * 60 * 1000; // consider leap years
+      const years = diffMs / msPerYear;
+      return years;
+    }
+
+    function formatOneDecimal(num) {
+      return Math.round(num * 10) / 10;
+    }
+
+    calculateBtn.addEventListener('click', function () {
+      const dateValue = birthdateInput.value;
+      if (!dateValue) {
+        resultP.textContent = '請選擇狗狗的出生日期。';
+        return;
+      }
+
+      const birthDate = new Date(dateValue);
+      if (isNaN(birthDate)) {
+        resultP.textContent = '請輸入有效的日期。';
+        return;
+      }
+
+      const now = new Date();
+      if (birthDate > now) {
+        resultP.textContent = '出生日期不可為未來時間。';
+        return;
+      }
+
+      const dogYears = calculateDogAge(birthDate);
+      const dogYearsRounded = formatOneDecimal(dogYears);
+      const humanYears = formatOneDecimal(dogYears * 7);
+
+      resultP.innerHTML = `${dogName}現在大約 <strong>${dogYearsRounded}</strong> 歲狗年齡，<br>換算成人類年齡大約是 <strong>${humanYears}</strong> 歲。`;
+    });
+  </script>
+</body>
+</html>
